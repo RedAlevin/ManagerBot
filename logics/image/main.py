@@ -7,8 +7,8 @@ import random
 
 
 def smart_slise(img_array):
-    # если изображение квадратное --> все норм
-    # если изображение не квадратное центруем и берем квадрат с ценнтра
+    # if the image is square --> all norm
+    # else centered and take a square from the center
     size_img = len(img_array), len(img_array[0])
 
     if size_img[0] == size_img[1]:
@@ -35,7 +35,7 @@ def smart_slise(img_array):
 
 
 def open_img_in_array(name_img):
-    # открытие картинки --> приведение к ргб --> преобразование к массиву
+    # open image --> RGB --> array
     img = image.open(name_img)
     img = img.convert("RGB")
     size_img = list(img.size)
@@ -49,7 +49,7 @@ def open_img_in_array(name_img):
 
 
 def convert_array_to_img(array, w, h):
-    # массив --> картинка
+    # array --> image
     img = image.new("RGB", [h, w])
     for i in range(h):
         for i1 in range(w):
@@ -59,7 +59,7 @@ def convert_array_to_img(array, w, h):
 
 
 def front_img(img, num, num2):
-    # создание задника под картинку
+    # background
     img = img.resize((num2, num2))
     img = bluring(img, num)
 
@@ -67,8 +67,8 @@ def front_img(img, num, num2):
 
 
 def plate_img_1(img1, img2):
-    #img1 smaller img
-    #img2 bigger img
+    #img1 - smaller img
+    #img2 - bigger img
     img_ar1 = np.array(img1, dtype=np.float32)
     img_ar2 = np.array(img2, dtype=np.float32)
 
@@ -81,8 +81,8 @@ def plate_img_1(img1, img2):
 
 
 def plate_img_2(img1, img2, border=2):
-    #img1 smaller img
-    #img2 bigger img
+    #img1 - smaller img
+    #img2 - bigger img
     img_ar1 = np.array(img1, dtype=np.float32)
     img_ar2 = np.array(img2, dtype=np.float32)
 
@@ -100,7 +100,7 @@ def plate_img_2(img1, img2, border=2):
 def plate_img_3(img1, img2, img3, border=80, sizeWhite=640):
     #img1 - first img
     #img2 - second img
-    #img3 - 3 img
+    #img3 - third img
 
     white_space = image.new("RGB",(sizeWhite, sizeWhite), "white")
     white_ar = np.array(white_space, dtype=np.float32)
@@ -123,14 +123,14 @@ def plate_img_3(img1, img2, img3, border=80, sizeWhite=640):
     return white_ar
 
 def bluring(img, n=2):
-    # блюр н-ное колливество раз
+    # blur n iteration
     for i in range(n):
         img = img.filter(PIL.ImageFilter.BLUR)
     return img
 
 
 def img_slise(img, size=10, size2=10):
-    # обрез краев
+    # cutting image
     img_ar = np.array(img, dtype=np.float32)
     new_img = image.new("RGB",[len(img_ar)-2*size,len(img_ar)-2*size2])
     for i in range(len(img_ar)-2*size):
@@ -140,7 +140,7 @@ def img_slise(img, size=10, size2=10):
 
 
 def photo(name, name2=None, name3=None, border=2, mode=1, bluring_con=12, size1=520, size2=640, size3=400):
-    # создание полноценного, готового изображения
+    # finish function
 
     img_inp_p = open_img_in_array(name)
     img_inp = smart_slise(img_inp_p)
@@ -178,23 +178,23 @@ def photo(name, name2=None, name3=None, border=2, mode=1, bluring_con=12, size1=
 
         img_ar_new = plate_img_3(img, imgBlur2, imgBlur3, sizeWhite=size2)
     elif mode ==4:
-        
+
         img_inp_p2 = open_img_in_array(name2)
         img_inp2 = smart_slise(img_inp_p2)
         img2 = convert_array_to_img(img_inp2, len(img_inp2), len(img_inp2[0]))
         img2 = img2.resize((size1, size1))
-        
+
 
         imgBlur2 = front_img(img2, bluring_con, size2+160)
         imgBlur2 = img_slise(imgBlur2, 80, 80)
         img_ar_new = plate_img_1(img, imgBlur2)
     elif mode ==5:
-        
+
         img_inp_p2 = open_img_in_array(name2)
         img_inp2 = smart_slise(img_inp_p2)
         img2 = convert_array_to_img(img_inp2, len(img_inp2), len(img_inp2[0]))
         img2 = img2.resize((size1, size1))
-        
+
 
         imgBlur2 = front_img(img2, bluring_con, size2+160)
         imgBlur2 = img_slise(imgBlur2, 80, 80)
@@ -204,9 +204,3 @@ def photo(name, name2=None, name3=None, border=2, mode=1, bluring_con=12, size1=
     img_new = convert_array_to_img(img_ar_new, size2, size2)
 
     return img_new
-
-
-if __name__ == "__main__":
-
-    img = photo("test/{}".format("3.jpg"),"test/{}".format("1.png"), mode=4)
-    img.save("blur3{}".format("1.jpg"))
