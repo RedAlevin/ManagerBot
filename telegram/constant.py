@@ -1,3 +1,3 @@
 
 # id bot token
-bot_token = ""
+bot_token = "blablabla"
