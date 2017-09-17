@@ -1,3 +1,4 @@
 ./idea
 ./idea*
 ./telegram/constant.py
+./telegram/constant2.py
