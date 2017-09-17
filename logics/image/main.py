@@ -1,9 +1,6 @@
 import numpy as np
 import PIL.Image as image
 import PIL.ImageFilter
-import pylab as visual
-import os
-import random
 
 
 def smart_slise(img_array):
