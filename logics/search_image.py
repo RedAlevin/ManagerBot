@@ -58,3 +58,50 @@ def download_img(name, mode=const.mode):
     image_get(const.folder, mode, page)
 
 
+
+def ru_to_search(message):
+
+    message = message.lower()
+
+    message = message.replace(" ", "%20")
+
+    ru_alp = "ёйцукенгшщзхъфывапролджэячсмитьбю"
+    sea_alp = ["%D1%91",  # ё
+               "%D0%B9",  # й
+               "%D1%86",  # ц
+               "%D1%83",  # у
+               "%D0%BA",  # к
+               "%D0%B5",  # е
+               "%D0%BD",  # н
+               "%D0%B3",  # г
+               "%D1%88",  # ш
+               "%D1%89",  # щ
+               "%D0%B7",  # з
+               "%D1%85",  # х
+               "%D1%8A",  # ъ
+               "%D1%84",  # ф
+               "%D1%8B",  # ы
+               "%D0%B2",  # в
+               "%D0%B0",  # а
+               "%D0%BF",  # п
+               "%D1%80",  # р
+               "%D0%BE",  # о
+               "%D0%BB",  # л
+               "%D0%B4",  # д
+               "%D0%B6",  # ж
+               "%D1%8D",  # э
+               "%D1%8F",  # я
+               "%D1%87",  # ч
+               "%D1%81",  # с
+               "%D0%BC",  # м
+               "%D0%B8",  # и
+               "%D1%82",  # т
+               "%D1%8C",  # ь
+               "%D0%B1",  # б
+               "%D1%8E",  # ю
+               ]
+    for i in range(len(ru_alp)):
+        message = message.replace(ru_alp[i], sea_alp[i])
+
+    return message
+
