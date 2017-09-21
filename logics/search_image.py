@@ -6,7 +6,10 @@ from urllib.request import urlopen, urlretrieve
 def html_get(name, type=const.mode):
     url = const.url[type].format(name)
     page = str(urlopen(url).read())
+    with open("html.html", 'w') as html:
+        html.write(page)
     return page
+
 
 def yandex_slice(page):
     url_img = []
@@ -35,14 +38,16 @@ def bing_slice(page):
     pass
 
 
-def image_get(folder, url_type, page, ):
+def image_get(folder, url_type, page):
     if url_type == "Yandex":
-        list_img = yandex_slice(page)[:30]
-        list_img = shuffle(list_img)
+        list_img = yandex_slice(page)
+        print(list_img)
+        shuffle(list_img)
         for i in range(const.download_img):
             try:
                 format_img = list_img[i].split(".")[-1]
-                download_img(list_img[i], "{}/{}.{}".format(folder, i, format_img))
+                file_name = "{}/{}.{}".format(folder, i, format_img)
+                download_img(list_img[i], file_name)
             except:
                 pass
     elif url_type == "Google":
@@ -54,6 +59,8 @@ def image_get(folder, url_type, page, ):
 def dow_img(url, name):
     urlretrieve(url, name)
 
-def download_img(name, sistem=const.mode):
-    page = html_get(name, sistem)
-    image_get(const.folder, sistem, page)
+
+def download_img(name):
+    page = html_get(name)
+    print(len(page))
+    image_get(const.folder, "Yandex", page)
