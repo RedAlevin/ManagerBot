@@ -136,7 +136,7 @@ def img_slise(img, size=10, size2=10):
     return new_img
 
 
-def photo(name, name2=None, name3=None, border=2, mode=1, bluring_con=12, size1=520, size2=640, size3=400):
+def photo(name, newname, name2=None, name3=None, border=2, mode=1, bluring_con=12, size1=520, size2=640, size3=400):
     # finish function
 
     img_inp_p = open_img_in_array(name)
@@ -200,4 +200,4 @@ def photo(name, name2=None, name3=None, border=2, mode=1, bluring_con=12, size1=
 
     img_new = convert_array_to_img(img_ar_new, size2, size2)
 
-    return img_new
+    img_new.save(newname)

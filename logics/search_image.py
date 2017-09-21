@@ -1,7 +1,7 @@
 import files.constant as const
 from random import shuffle
 from urllib.request import urlopen, urlretrieve
-import os
+
 
 def html_get(name, type=const.mode):
     url = const.url[type].format(name)
@@ -40,7 +40,6 @@ def image_get(folder, url_type, page):
     if url_type == "Yandex":
         list_img = yandex_slice(page)[:30]
         shuffle(list_img)
-        print(list_img)
         for i in range(const.download_img):
             try:
                 format_img = list_img[i].split(".")[-1]
@@ -53,9 +52,9 @@ def image_get(folder, url_type, page):
     elif url_type == "Bing":
         pass
 
+
 def download_img(name, mode=const.mode):
     page = html_get(name, mode)
-    print(len(page))
     image_get(const.folder, mode, page)
 
 

@@ -1,5 +1,8 @@
 import files.constant as const
 import logics.search_image
+import os
+import logics.blur
+
 
 def if_my_message(message):
     message_id = message.from_user.id
@@ -15,4 +18,9 @@ def if_my_message(message):
 
 
 def generate_img():
-    logics.search_image.download_img("bunnu")
+    logics.search_image.download_img("monster")
+    dir = os.listdir(os.getcwd()+"/files/saves")
+    for i in range(len(dir)):
+        logics.blur.photo("files/saves/{}".format(dir[i]), "files/blur/{}.jpg".format(i))
+        os.remove("files/saves/{}".format(dir[i]))
+    print("Complited")
