@@ -1,13 +1,11 @@
 import files.constant as const
 from random import shuffle
 from urllib.request import urlopen, urlretrieve
-
+import os
 
 def html_get(name, type=const.mode):
     url = const.url[type].format(name)
     page = str(urlopen(url).read())
-    with open("html.html", 'w') as html:
-        html.write(page)
     return page
 
 
@@ -40,14 +38,14 @@ def bing_slice(page):
 
 def image_get(folder, url_type, page):
     if url_type == "Yandex":
-        list_img = yandex_slice(page)
-        print(list_img)
+        list_img = yandex_slice(page)[:30]
         shuffle(list_img)
+        print(list_img)
         for i in range(const.download_img):
             try:
                 format_img = list_img[i].split(".")[-1]
                 file_name = "{}/{}.{}".format(folder, i, format_img)
-                download_img(list_img[i], file_name)
+                urlretrieve(list_img[i], file_name)
             except:
                 pass
     elif url_type == "Google":
@@ -55,12 +53,9 @@ def image_get(folder, url_type, page):
     elif url_type == "Bing":
         pass
 
-
-def dow_img(url, name):
-    urlretrieve(url, name)
-
-
-def download_img(name):
-    page = html_get(name)
+def download_img(name, mode=const.mode):
+    page = html_get(name, mode)
     print(len(page))
-    image_get(const.folder, "Yandex", page)
+    image_get(const.folder, mode, page)
+
+

@@ -1,6 +1,5 @@
 import files.constant as const
 import logics.search_image
-import time
 
 def if_my_message(message):
     message_id = message.from_user.id
@@ -16,5 +15,4 @@ def if_my_message(message):
 
 
 def generate_img():
-    time.sleep(1)
-    logics.search_image.download_img("fuck")
+    logics.search_image.download_img("bunnu")
