@@ -16,7 +16,7 @@ print("COMPLITE")
 
 from urllib.request import urlopen
 for i in range(len(keys)):
-    page = urlopen('https://yandex.ru/images/search?text={}'.format(keys[i]), timeout=50)
+    page = urlopen('https://yandex.ru/images/search?text={}'.format(keys[i]))
 
     with open("{}.html".format(keys[i]), "wb") as fh:
         fh.write(page.read())
@@ -24,4 +24,4 @@ for i in range(len(keys)):
 
 
 with open("bunny.html", 'r') as html:
-    while
+    print(len(html.readline()))
