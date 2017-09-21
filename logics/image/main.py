@@ -144,15 +144,15 @@ def photo(name, name2=None, name3=None, border=2, mode=1, bluring_con=12, size1=
     img = convert_array_to_img(img_inp, len(img_inp), len(img_inp[0]))
     img = img.resize((size1, size1))
 
-    if mode==1:
+    if mode == 1:
         imgBlur = front_img(img, bluring_con, size2+160)
         imgBlur = img_slise(imgBlur, 80, 80)
         img_ar_new = plate_img_1(img, imgBlur)
-    elif mode==2:
+    elif mode == 2:
         imgBlur = front_img(img, bluring_con, size2 + 160)
         imgBlur = img_slise(imgBlur, 80, 80)
         img_ar_new = plate_img_2(img, imgBlur, border)
-    elif mode==3:
+    elif mode == 3:
         img_inp_p2 = open_img_in_array(name2)
         img_inp2 = smart_slise(img_inp_p2)
         img2 = convert_array_to_img(img_inp2, len(img_inp2), len(img_inp2[0]))
@@ -174,7 +174,7 @@ def photo(name, name2=None, name3=None, border=2, mode=1, bluring_con=12, size1=
         imgBlur3 = imgBlur3.resize((size3, size3))
 
         img_ar_new = plate_img_3(img, imgBlur2, imgBlur3, sizeWhite=size2)
-    elif mode ==4:
+    elif mode == 4:
 
         img_inp_p2 = open_img_in_array(name2)
         img_inp2 = smart_slise(img_inp_p2)
@@ -185,7 +185,7 @@ def photo(name, name2=None, name3=None, border=2, mode=1, bluring_con=12, size1=
         imgBlur2 = front_img(img2, bluring_con, size2+160)
         imgBlur2 = img_slise(imgBlur2, 80, 80)
         img_ar_new = plate_img_1(img, imgBlur2)
-    elif mode ==5:
+    elif mode == 5:
 
         img_inp_p2 = open_img_in_array(name2)
         img_inp2 = smart_slise(img_inp_p2)

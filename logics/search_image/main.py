@@ -6,9 +6,9 @@ from urllib.request import urlopen, urlretrieve
 def html_get(name, type=const.mode):
     url = const.url[type].format(name)
     page = str(urlopen(url).read())
-    return type, page
+    return page
 
-def yandex_slise(page):
+def yandex_slice(page):
     url_img = []
     while page:
         k = page.find(const.serch["Yandex"])
@@ -27,13 +27,22 @@ def yandex_slise(page):
     return url_img
 
 
-def image_get(folder, url_type, page, number=const.download_img):
+def google_slice(page):
+    pass
+
+
+def bing_slice(page):
+    pass
+
+
+def image_get(folder, url_type, page, ):
     if url_type == "Yandex":
-        list_img = yandex_slise(page)
-        for i in range(30):
+        list_img = yandex_slice(page)[:30]
+        list_img = shuffle(list_img)
+        for i in range(const.download_img):
             try:
                 format_img = list_img[i].split(".")[-1]
-                download_img(list_img[i], "{}/bunny{}.{}".format(folder ,i, format_img))
+                download_img(list_img[i], "{}/{}.{}".format(folder, i, format_img))
             except:
                 pass
     elif url_type == "Google":
@@ -42,11 +51,9 @@ def image_get(folder, url_type, page, number=const.download_img):
         pass
 
 
-def download_img(url, name):
+def dow_img(url, name):
     urlretrieve(url, name)
 
-
-
-
-if __name__ == '__main__':
-    t, page = html_get("bunny")
+def download_img(name, sistem=const.mode):
+    page = html_get(name, sistem)
+    image_get(const.folder, sistem, page)

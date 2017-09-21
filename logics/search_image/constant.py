@@ -1,16 +1,20 @@
 # search constant
 
 url = {
-    "Google": "https://google.ru/search?q={}&newwindow=1&espv=2&source=lnms&tbm=isch&sa=X",    # disabled
+    "Google": "https://google.ru/search?q={}&tbm=isch",    # disabled
     "Yandex": "https://yandex.ru/images/search?text={}",    # enabled
-    "Bing": ""	   # disabled
+    "Bing": "http://www.bing.com/images/search?q={}"	   # disabled
 }
 
 serch = {
     "Yandex": "<a class=\"serp-item__link\" href=\"",
+    "Google": "",
+    "Bing": ""
 }
 
 download_img = 5
 
 mode = "Yandex"
+
+folder = "files/saves"
 
