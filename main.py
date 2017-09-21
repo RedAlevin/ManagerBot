@@ -1,5 +1,5 @@
 import telebot
-import telegram.constant as const
+import files.constant as const
 
 bot = telebot.TeleBot(const.bot_token)
 

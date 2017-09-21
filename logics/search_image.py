@@ -1,4 +1,4 @@
-import logics.search_image.constant as const
+import files.constant as const
 from random import shuffle
 from urllib.request import urlopen, urlretrieve
 
