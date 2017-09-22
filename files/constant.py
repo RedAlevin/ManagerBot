@@ -12,7 +12,7 @@ serch = {
     "Bing": ""
 }
 
-download_img = 5
+download_img = 10
 
 mode = "Yandex"
 
