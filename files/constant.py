@@ -12,7 +12,7 @@ serch = {
     "Bing": ""
 }
 
-download_img = 5
+download_img = 10
 
 mode = "Yandex"
 
@@ -21,7 +21,7 @@ folder = "files/saves"
 
 # blur constant
 
-default_mode = 2
+default_mode = 1
 
 border = 3
 
@@ -47,7 +47,7 @@ color_background = "white"
 
 mark = True
 
-mark_name = "files/waterMark.png"
+mark_name = "file/waterMark.png"
 
 mark_position = {
     0: (0, 0),

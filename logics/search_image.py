@@ -36,14 +36,14 @@ def bing_slice(page):
     pass
 
 
-def image_get(folder, folder_pp, url_type, page):
+def image_get(folder, url_type, page):
     if url_type == "Yandex":
         list_img = yandex_slice(page)[:30]
         shuffle(list_img)
         for i in range(const.download_img):
             try:
                 format_img = list_img[i].split(".")[-1]
-                file_name = "{}/{}/{}.{}".format(folder, folder_pp, i, format_img)
+                file_name = "{}/{}.{}".format(folder, i, format_img)
                 urlretrieve(list_img[i], file_name)
             except:
                 pass
@@ -53,13 +53,9 @@ def image_get(folder, folder_pp, url_type, page):
         pass
 
 
-def download_img(name, id):
-    mode = const.mode
-
-    name = ru_to_search(name)
-
+def download_img(name, mode=const.mode):
     page = html_get(name, mode)
-    image_get(const.folder, id, mode, page)
+    image_get(const.folder, mode, page)
 
 
 

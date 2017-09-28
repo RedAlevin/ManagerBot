@@ -15,17 +15,15 @@ def smart_slice(img):
         border = (size_img[0] - size_img[1]) // 2
 
         img_ret = [img.crop((border, 0, border + size_img[1], size_img[1])),
-                   #img.crop((0, 0, size_img[1], size_img[1])),
-                   #img.crop((size_img[0] - size_img[1], 0, size_img[0], size_img[1]))
-                   ]
+                   img.crop((0, 0, size_img[1], size_img[1])),
+                   img.crop((size_img[0] - size_img[1], 0, size_img[0], size_img[1]))]
     elif size_img[0] < size_img[1]:
 
         border = (size_img[1] - size_img[0]) // 2
 
         img_ret = [img.crop((0, border, size_img[0], border + size_img[0])),
-                   #img.crop((0, 0, size_img[0], size_img[0])),
-                   #img.crop((0, size_img[1] - size_img[0], size_img[0], size_img[1]))
-                   ]
+                   img.crop((0, 0, size_img[0], size_img[0])),
+                   img.crop((0, size_img[1] - size_img[0], size_img[0], size_img[1]))]
     return img_ret
 
 
