@@ -19,6 +19,43 @@ mode = "Yandex"
 folder = "files/saves"
 
 
+# blur constant
+
+default_mode = 1
+
+border = 3
+
+blurring = 12
+
+big_size = 640
+
+small_size = 520
+
+add_to_size = 160
+
+color_bolder = "black"
+
+XS_size = 400
+
+default_mode3 = 3
+
+border3 = 80
+
+add_to_size3 = 20
+
+color_background = "white"
+
+mark = True
+
+mark_name = "file/waterMark.png"
+
+mark_position = {
+    0: (0, 0),
+    1: (230, 0),
+    2: (230, 580),
+    3: (460, 580)
+}
+
 # telegram constant
 
 # id bot token
