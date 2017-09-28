@@ -1,6 +1,6 @@
 .idea
-.idea*
-telegram/constant.py
-*.bd3
+.idea/*
 
-
+files/BD/
+files/blur/
+files/saves/
