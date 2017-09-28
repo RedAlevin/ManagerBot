@@ -1,203 +1,226 @@
-import numpy as np
 import PIL.Image as image
 import PIL.ImageFilter
+import files.constant as const
 
 
-def smart_slise(img_array):
+def smart_slice(img):
     # if the image is square --> all norm
     # else centered and take a square from the center
-    size_img = len(img_array), len(img_array[0])
+    size_img = img.size
 
     if size_img[0] == size_img[1]:
-        img_arr2 = np.array(img_array, dtype=np.float32)
+        img_ret = [img]
     elif size_img[0] > size_img[1]:
-        new_ar_f = []
-        for i in range(size_img[1]):
-            new_ar_l = []
-            for i2 in range(size_img[1]):
-                new_ar_l.append(img_array[(size_img[0] - size_img[1])//2 + i][i2])
-            new_ar_f.append(new_ar_l)
-        img_arr2 = np.array(new_ar_f, dtype=np.float32)
 
+        border = (size_img[0] - size_img[1]) // 2
+
+        img_ret = [img.crop((border, 0, border + size_img[1], size_img[1])),
+                   #img.crop((0, 0, size_img[1], size_img[1])),
+                   #img.crop((size_img[0] - size_img[1], 0, size_img[0], size_img[1]))
+                   ]
     elif size_img[0] < size_img[1]:
-        new_ar_f = []
-        for i in range(size_img[0]):
-            new_ar_l = []
-            for i2 in range(size_img[0]):
-                new_ar_l.append(img_array[i][i2 + (size_img[1] - size_img[0]) // 2])
-            new_ar_f.append(new_ar_l)
-        img_arr2 = np.array(new_ar_f, dtype=np.float32)
 
-    return img_arr2
+        border = (size_img[1] - size_img[0]) // 2
 
-
-def open_img_in_array(name_img):
-    # open image --> RGB --> array
-    img = image.open(name_img)
-    img = img.convert("RGB")
-    size_img = list(img.size)
-    if size_img[1]%2 == 1:
-        size_img[1] += 1
-    if size_img[0]%2 == 1:
-        size_img[0] += 1
-    img = img.resize(size_img)
-    img_ar = np.array(img, dtype=np.float32)
-    return img_ar
+        img_ret = [img.crop((0, border, size_img[0], border + size_img[0])),
+                   #img.crop((0, 0, size_img[0], size_img[0])),
+                   #img.crop((0, size_img[1] - size_img[0], size_img[0], size_img[1]))
+                   ]
+    return img_ret
 
 
-def convert_array_to_img(array, w, h):
-    # array --> image
-    img = image.new("RGB", [h, w])
-    for i in range(h):
-        for i1 in range(w):
-            img.putpixel((i, i1), tuple(array[i1][i]))
+def front_img(img, add=const.add_to_size):
 
-    return img
+    size1 = const.big_size + add
 
-
-def front_img(img, num, num2):
     # background
-    img = img.resize((num2, num2))
-    img = bluring(img, num)
+    img = img.resize((size1, size1))
+    img = blurring(img)
 
     return img
 
 
-def plate_img_1(img1, img2):
-    #img1 - smaller img
-    #img2 - bigger img
-    img_ar1 = np.array(img1, dtype=np.float32)
-    img_ar2 = np.array(img2, dtype=np.float32)
+def blurring(img):
 
-    sd = (len(img_ar2) - len(img_ar1)) // 2
+    n = const.blurring
 
-    for i in range(len(img_ar1)):
-        for i2 in range(len(img_ar1)):
-                img_ar2[i+sd][i2+sd] = img_ar1[i][i2]
-    return img_ar2
-
-
-def plate_img_2(img1, img2, border=2):
-    #img1 - smaller img
-    #img2 - bigger img
-    img_ar1 = np.array(img1, dtype=np.float32)
-    img_ar2 = np.array(img2, dtype=np.float32)
-
-    sd = (len(img_ar2) - len(img_ar1)) // 2
-
-    for i in range(len(img_ar1) + 2*border):
-        for i2 in range(len(img_ar1) + 2*border):
-                img_ar2[i+sd-border][i2+sd-border] = [0, 0, 0]
-    for i in range(len(img_ar1)):
-        for i2 in range(len(img_ar1)):
-                img_ar2[i+sd][i2+sd] = img_ar1[i][i2]
-    return img_ar2
-
-
-def plate_img_3(img1, img2, img3, border=80, sizeWhite=640):
-    #img1 - first img
-    #img2 - second img
-    #img3 - third img
-
-    white_space = image.new("RGB",(sizeWhite, sizeWhite), "white")
-    white_ar = np.array(white_space, dtype=np.float32)
-
-    img_ar1 = np.array(img1, dtype=np.float32)
-    img_ar2 = np.array(img2, dtype=np.float32)
-    img_ar3 = np.array(img3, dtype=np.float32)
-
-    sd = (sizeWhite - (len(img_ar1)+2*border)) // 2
-
-    for i in range(len(img_ar1)):
-        for i2 in range(len(img_ar1)):
-            white_ar[i+sd][i2+sd+2*border] = img_ar3[i][i2]
-    for i in range(len(img_ar1)):
-        for i2 in range(len(img_ar1)):
-            white_ar[i+sd+border][i2+sd+border] = img_ar2[i][i2]
-    for i in range(len(img_ar1)):
-        for i2 in range(len(img_ar1)):
-            white_ar[i+sd+2*border][i2+sd] = img_ar1[i][i2]
-    return white_ar
-
-def bluring(img, n=2):
     # blur n iteration
     for i in range(n):
         img = img.filter(PIL.ImageFilter.BLUR)
     return img
 
 
-def img_slise(img, size=10, size2=10):
-    # cutting image
-    img_ar = np.array(img, dtype=np.float32)
-    new_img = image.new("RGB",[len(img_ar)-2*size,len(img_ar)-2*size2])
-    for i in range(len(img_ar)-2*size):
-        for i2 in range(len(img_ar)-2*size2):
-            new_img.putpixel((i, i2), tuple(img_ar[i2+size2][i+size]))
-    return new_img
+def photo_one(name, new_name):
+
+    border = const.border
+    mode = const.default_mode
+    size1 = const.small_size
+    size2 = const.big_size
+    front_border = const.add_to_size // 2
+    color_border = const.color_bolder
+    mark = const.mark
 
 
-def photo(name, newname, name2=None, name3=None, border=2, mode=1, bluring_con=12, size1=520, size2=640, size3=400):
-    # finish function
+    img_inp_p = image.open(name)
+    img_inp_p.convert("RGBA")
 
-    img_inp_p = open_img_in_array(name)
-    img_inp = smart_slise(img_inp_p)
-    img = convert_array_to_img(img_inp, len(img_inp), len(img_inp[0]))
+    img_inp = smart_slice(img_inp_p)
+
+    for i in range(len(img_inp)):
+        img = img_inp[i]
+        img = img.resize((size1, size1))
+        imgBlur = front_img(img)
+        imgBlur = imgBlur.crop((front_border, front_border,
+                                front_border + size2, front_border + size2))
+        if mode == 2:
+            border_img = image.new("RGBA",
+                                   (size1 + border * 2, size1 + border * 2),
+                                   color_border)
+            imgBlur.paste(border_img, ((size2 - size1 - border * 2) // 2,
+                                          (size2 - size1 - border * 2) // 2))
+        imgBlur.paste(img, ((size2-size1) // 2,
+                                      (size2 - size1) // 2))
+
+        if mark:
+            w_m = image.open(const.mark_name)
+
+            w_m = w_m.resize((180, 60))
+            imgBlur.paste(w_m, const.mark_position[2])
+
+        imgBlur.save(new_name.format(i))
+
+
+def photo_two(name1, name2, new_name):
+
+    border = const.border
+    mode = const.default_mode
+    size1 = const.small_size
+    size2 = const.big_size
+    front_border = const.add_to_size // 2
+    color_border = const.color_bolder
+    mark = const.mark
+
+
+    img_inp_p1 = image.open(name1)
+    img_inp_p1.convert("RGBA")
+    img_inp1 = smart_slice(img_inp_p1)
+
+    img_inp_p2 = image.open(name2)
+    img_inp_p2.convert("RGBA")
+    img_inp2 = smart_slice(img_inp_p2)
+
+    img = img_inp1[0]
     img = img.resize((size1, size1))
 
+    imgBlur = front_img(img_inp2[0])
+    imgBlur = imgBlur.crop((front_border, front_border,
+                            front_border + size2, front_border + size2))
+
+    if mode == 2:
+        border_img = image.new("RGB",
+                               (size1 + border * 2, size1 + border * 2),
+                               color_border)
+        imgBlur.paste(border_img, ((size2 - size1 - border * 2) // 2,
+                                   (size2 - size1 - border * 2) // 2))
+    imgBlur.paste(img, ((size2 - size1) // 2,
+                        (size2 - size1) // 2))
+
+    if mark:
+        w_m = image.open(const.mark_name)
+
+        w_m = w_m.resize((180, 60))
+        imgBlur.paste(w_m, const.mark_position[2])
+
+    imgBlur.save(new_name)
+
+
+def photo_thee(name1, name2, name3, new_name):
+
+    border = const.border
+    mode = const.default_mode3
+    size1 = const.XS_size
+    size2 = const.big_size
+    front_border = const.add_to_size3 // 2
+    nd = const.border3
+    color_background = const.color_background
+    color_border = const.color_bolder
+    mark = const.mark
+
+
+    img_inp_p1 = image.open(name1)
+    img_inp_p1.convert("RGBA")
+    img_inp1 = smart_slice(img_inp_p1)
+
+    img_inp_p2 = image.open(name2)
+    img_inp_p2.convert("RGBA")
+    img_inp2 = smart_slice(img_inp_p2)
+
+    img_inp_p3 = image.open(name3)
+    img_inp_p3.convert("RGBA")
+    img_inp3 = smart_slice(img_inp_p3)
+
+    img = img_inp1[0]
+    img = img.resize((size1, size1))
+
+    imgBlur = front_img(img_inp2[0], front_border * 2)
+    imgBlur2 = front_img(img_inp3[0], front_border * 2)
+
+    imgBlur = imgBlur.crop((front_border, front_border,
+                            front_border + size1, front_border + size1))
+    imgBlur2 = imgBlur2.crop((front_border, front_border,
+                            front_border + size1, front_border + size1))
+    background = image.new("RGB", (size2, size2), color_background)
+    nd_border = (size2 - (size1 + 2 * nd)) // 2
+
     if mode == 1:
-        imgBlur = front_img(img, bluring_con, size2+160)
-        imgBlur = img_slise(imgBlur, 80, 80)
-        img_ar_new = plate_img_1(img, imgBlur)
+        background.paste(imgBlur2, (nd_border + 2 * nd,
+                                    nd_border))
+        background.paste(imgBlur, (nd_border + nd,
+                                   nd_border + nd))
+        background.paste(img, (nd_border,
+                               nd_border + 2 * nd))
     elif mode == 2:
-        imgBlur = front_img(img, bluring_con, size2 + 160)
-        imgBlur = img_slise(imgBlur, 80, 80)
-        img_ar_new = plate_img_2(img, imgBlur, border)
+        border_img = image.new("RGB",
+                               (size1 + border * 2, size1 + border * 2),
+                               color_border)
+        background.paste(border_img, (nd_border + 2 * nd - border,
+                                   nd_border - border ))
+        background.paste(border_img, (nd_border + nd - border,
+                                   nd_border + nd - border))
+        background.paste(border_img, (nd_border - border,
+                                   nd_border + 2 * nd - border))
+
+
+        background.paste(imgBlur2, (nd_border + 2 * nd,
+                                    nd_border))
+        background.paste(imgBlur, (nd_border + nd,
+                                   nd_border + nd))
+        background.paste(img, (nd_border,
+                               nd_border + 2 * nd))
+
     elif mode == 3:
-        img_inp_p2 = open_img_in_array(name2)
-        img_inp2 = smart_slise(img_inp_p2)
-        img2 = convert_array_to_img(img_inp2, len(img_inp2), len(img_inp2[0]))
-        img2 = img2.resize((size1, size1))
+        border_img = image.new("RGB",
+                               (size1 + border * 2, size1 + border * 2),
+                               color_border)
+        background.paste(border_img, (nd_border + 2 * nd - border,
+                                      nd_border - border))
+        background.paste(imgBlur2, (nd_border + 2 * nd,
+                                    nd_border))
 
-        img_inp_p3 = open_img_in_array(name3)
-        img_inp3 = smart_slise(img_inp_p3)
-        img3 = convert_array_to_img(img_inp3, len(img_inp3), len(img_inp3[0]))
-        img3 = img3.resize((size1, size1))
+        background.paste(border_img, (nd_border + nd - border,
+                                      nd_border + nd - border))
+        background.paste(imgBlur, (nd_border + nd,
+                                   nd_border + nd))
 
-        imgBlur2 = front_img(img2, bluring_con, size2+20)
-        imgBlur2 = img_slise(imgBlur2, 10, 10)
+        background.paste(border_img, (nd_border - border,
+                                      nd_border + 2 * nd - border))
+        background.paste(img, (nd_border,
+                               nd_border + 2 * nd))
 
-        imgBlur3 = front_img(img3, 2 * bluring_con, size2 + 20)
-        imgBlur3 = img_slise(imgBlur3, 10, 10)
+    if mark:
+        w_m = image.open(const.mark_name)
 
-        img = img.resize((size3, size3))
-        imgBlur2 = imgBlur2.resize((size3, size3))
-        imgBlur3 = imgBlur3.resize((size3, size3))
+        w_m = w_m.resize((180, 60))
+        background.paste(w_m, const.mark_position[2])
 
-        img_ar_new = plate_img_3(img, imgBlur2, imgBlur3, sizeWhite=size2)
-    elif mode == 4:
-
-        img_inp_p2 = open_img_in_array(name2)
-        img_inp2 = smart_slise(img_inp_p2)
-        img2 = convert_array_to_img(img_inp2, len(img_inp2), len(img_inp2[0]))
-        img2 = img2.resize((size1, size1))
-
-
-        imgBlur2 = front_img(img2, bluring_con, size2+160)
-        imgBlur2 = img_slise(imgBlur2, 80, 80)
-        img_ar_new = plate_img_1(img, imgBlur2)
-    elif mode == 5:
-
-        img_inp_p2 = open_img_in_array(name2)
-        img_inp2 = smart_slise(img_inp_p2)
-        img2 = convert_array_to_img(img_inp2, len(img_inp2), len(img_inp2[0]))
-        img2 = img2.resize((size1, size1))
-
-
-        imgBlur2 = front_img(img2, bluring_con, size2+160)
-        imgBlur2 = img_slise(imgBlur2, 80, 80)
-        img_ar_new = plate_img_2(img, imgBlur2)
-
-
-    img_new = convert_array_to_img(img_ar_new, size2, size2)
-
-    img_new.save(newname)
+    background.save(new_name)

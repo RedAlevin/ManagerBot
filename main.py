@@ -7,7 +7,14 @@ bot = telebot.TeleBot(const.bot_token)
 
 @bot.message_handler(content_types=["text"])
 def handle_text(message):
-    function.if_my_message(message)
-    function.push_img(bot)
+    bot.send_message(message.from_user.id, "I searching image!")
+    print(message.text)
+
+    bot.send_message(message.from_user.id, "Searching - completed.\n I generating image!")
+    function.generate_img(message.text, message.from_user.id)
+
+    bot.send_message(message.from_user.id, "Generating - completed.\n I pushing image!")
+    function.push_all(bot, message)
+    print("Push")
 
 bot.polling(0)

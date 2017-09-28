@@ -1,3 +1,6 @@
-idea
-idea*
+.idea
+.idea/*
 telegram/constant.py
+*.bd3
+
+
