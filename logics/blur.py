@@ -222,7 +222,3 @@ def photo_thee(name1, name2, name3, new_name):
         background.paste(w_m, const.mark_position[2])
 
     background.save(new_name)
-
-
-if __name__ == '__main__':
-    photo_one("test1.jpg", "myPngThee{}.png")
